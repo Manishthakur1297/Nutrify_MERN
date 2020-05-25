@@ -120,6 +120,36 @@ router.get('/:id', auth, async (req, res) => {
 })
 
 
+// @route       GET api/meals/:id
+// @desc        GET Meal By ID
+// @access      Private
+router.get('/date/:day', auth, async (req, res) => {
+    try {
+
+        //Check Valid User
+
+        const user = await User.findById(req.user.id).select('-password');
+
+        if(user.is_super_user){
+            const meals = await Meal.find({day: req.params.day}).sort({ date: -1 })
+            return res.json(meals)
+        }
+
+        const meals = await Meal.find({day: req.params.day, user:req.user.id}).sort({ date: -1 })
+        return res.json(meals)
+
+    } catch (error) {
+
+        if(error.kind === 'ObjectId'){
+            return res.status(404).json({"msg" : "Meal Not Found!!!"})
+        }
+        console.log(error.message)
+        res.status(500).send("Server Error!!")
+    }
+})
+
+
+
 // @route       DELETE api/meals/:id
 // @desc        Delete Meal By ID
 // @access      Private
