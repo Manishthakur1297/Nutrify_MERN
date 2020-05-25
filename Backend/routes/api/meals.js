@@ -32,11 +32,7 @@ async (req, res) => {
     try {
         
         const user = await User.findById(req.user.id).select('-password');
-
-        // const dateFormat = (date) => 
-        // {
-        //     return date.getDate()+""+parseInt(date.getMonth()+1)+""+date.getFullYear()
-        // }
+        
         const newMeal = new Meal({
             food_name: req.body.food_name,
             calorie: req.body.calorie,
